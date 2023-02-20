@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  wordpress:
+    build: .
+    ports:
+      - 8001:80
+    volumes:
+      - ./:/var/www/html/
+      - ./entrypoint.sh:/entrypoint.sh
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      # REMOTO
+      BACKUP_ENABLED: "true"
+      WORDPRESS_DB_HOST_REMOTO: "000.000.000.00"
+      WORDPRESS_DB_USER_REMOTO: ""
+      WORDPRESS_DB_PASSWORD_REMOTO: ""
+      WORDPRESS_DB_NAME_REMOTO: ""
+      FTP_HOST: ""
+      FTP_USER: ""
+      FTP_PASSWORD: ""
+      REMOTE_DIR_PATH: "" 
+      LOCAL_DIR_PATH: ""
+    depends_on:
+      - db
+    restart: always
+
+  db:
+    image: mysql:5.7
+    ports:
+      - "3306"
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+      MYSQL_RANDOM_ROOT_PASSWORD: "1"
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+
+volumes:
+  db_data:
+
